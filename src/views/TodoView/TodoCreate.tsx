@@ -4,13 +4,13 @@ import Dialog from "@/components/Dialog";
 import { type Todo, TodoStatusEnum } from "@/types/api";
 import EditTodoStatus from "@/views/TodoView/EditTodoStatus";
 import { DEFAULT_TODO } from "@/views/TodoView/common";
-import React from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 export interface TodoCreateProps {
-  open: boolean;
-  setOpen: (value: boolean) => void;
-  onSubmitted: (todo: Todo) => void;
+  readonly open: boolean;
+  readonly setOpen: (value: boolean) => void;
+  readonly onSubmitted: (todo: Todo) => void;
 }
 
 export default function TodoCreate({ open, setOpen, onSubmitted }: TodoCreateProps) {
@@ -30,7 +30,7 @@ export default function TodoCreate({ open, setOpen, onSubmitted }: TodoCreatePro
     }
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     open && setFocus("description");
   }, [open, setFocus]);
 
@@ -49,12 +49,12 @@ export default function TodoCreate({ open, setOpen, onSubmitted }: TodoCreatePro
           <textarea
             {...register("description")}
             autoFocus
+            cols={60}
             id="edit-description"
             rows={10}
-            cols={60}
           />
         </div>
-        <Button variant="filled" type="submit" className="text-lg">
+        <Button className="text-lg" type="submit" variant="filled">
           Create
         </Button>
       </form>

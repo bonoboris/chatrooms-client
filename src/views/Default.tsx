@@ -6,7 +6,7 @@ export default function Default() {
       <p className="text-4xl">You are lost...</p>
       <p className="text-2xl">
         Go back to{" "}
-        <Link href="/" className="font-semibold">
+        <Link className="font-semibold" href="/">
           homepage
         </Link>
       </p>

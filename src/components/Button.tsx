@@ -1,12 +1,6 @@
 import clsx from "clsx";
 import type React from "react";
 
-export interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "color"> {
-  variant?: "default" | "outlined" | "filled";
-  color?: "default" | "error";
-  htmlColor?: string;
-}
-
 const classNames = {
   base: "rounded-md border font-semibold tracking-wide px-4 py-1",
   variants: {
@@ -33,12 +27,21 @@ const classNames = {
   },
 };
 
+export interface ButtonProps
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "color" | "type"> {
+  readonly variant?: "default" | "outlined" | "filled";
+  readonly color?: "default" | "error";
+  readonly htmlColor?: string;
+  readonly type?: "button" | "submit" | "reset";
+}
+
 export default function Button({
   variant = "default",
   color = "default",
-  htmlColor,
+  htmlColor = undefined,
   children,
   className,
+  type = "button",
   ...props
 }: ButtonProps) {
   return (
@@ -50,6 +53,8 @@ export default function Button({
         className,
       )}
       color={htmlColor}
+      // eslint-disable-next-line react/button-has-type
+      type={type}
       {...props}
     >
       {children}

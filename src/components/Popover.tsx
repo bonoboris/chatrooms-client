@@ -1,15 +1,15 @@
-import React from "react";
+import { useLayoutEffect, useRef, type DialogHTMLAttributes } from "react";
 
-export interface PopoverProps extends React.DialogHTMLAttributes<HTMLDialogElement> {
-  setOpen: (value: boolean) => void;
+export interface PopoverProps extends DialogHTMLAttributes<HTMLDialogElement> {
+  readonly setOpen: (value: boolean) => void;
 }
 
 export default function Popover({ open, setOpen, children, className, ...props }: PopoverProps) {
-  const ref = React.useRef<HTMLDialogElement | null>(null);
-  const firstEvent = React.useRef<boolean>(true);
+  const ref = useRef<HTMLDialogElement | null>(null);
+  const firstEvent = useRef<boolean>(true);
   const element = ref.current;
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     function onWindowClick(evt: MouseEvent) {
       if (element == null || !open) return;
       if (firstEvent.current) {
@@ -35,7 +35,7 @@ export default function Popover({ open, setOpen, children, className, ...props }
   console.log({ open, firstEvent: firstEvent.current });
 
   return (
-    <dialog ref={ref} open={open} className={className} {...props}>
+    <dialog className={className} open={open} ref={ref} {...props}>
       {children}
     </dialog>
   );

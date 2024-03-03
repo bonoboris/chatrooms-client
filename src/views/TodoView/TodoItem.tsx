@@ -1,18 +1,19 @@
 import { type Todo } from "@/types/api";
 import clsx from "clsx";
-import React from "react";
+import { memo, useCallback } from "react";
 
 export interface TodoItemProps {
-  todo: Todo;
-  onClick: () => void;
+  readonly todo: Todo;
+  readonly onClick: (todo: Todo) => void;
 }
 
-const TodoItem: React.FC<TodoItemProps> = React.memo(function TodoShow({ todo, onClick }) {
+const TodoItem = memo(function TodoShow({ todo, onClick }: TodoItemProps) {
+  const handleClick = useCallback(() => onClick(todo), [onClick, todo]);
   return (
     <li
-      key={todo.id}
       className="cursor-pointer rounded-lg border p-2 hover:bg-neutral-100 dark:hover:bg-neutral-900"
-      onClick={onClick}
+      key={todo.id}
+      onClick={handleClick}
     >
       <small
         className={clsx(

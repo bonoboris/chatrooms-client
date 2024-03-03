@@ -9,16 +9,16 @@ import Homepage from "@/views/Homepage";
 import RoomView from "@/views/RoomView";
 import SignIn from "@/views/SignIn";
 import TodoView from "@/views/TodoView";
-import React from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Route, Switch, useLocation } from "wouter";
 
 export default function App() {
-  const [user, setUser] = React.useState<User | null | undefined>(undefined);
+  const [user, setUser] = useState<User | null | undefined>(undefined);
 
   const [location, setLocation] = useLocation();
 
   // Initial check whether user is logged in
-  React.useEffect(() => {
+  useEffect(() => {
     UserApi.current()
       .then((resp) => setUser(resp.data))
       .catch(() => {
@@ -27,14 +27,14 @@ export default function App() {
       });
   }, [setLocation]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (user === null && location != "/signin") {
       console.log("useUser is null: redirect to signin!");
       setLocation("/signin");
     }
   }, [user, location, setLocation]);
 
-  const onLogin = React.useCallback(() => {
+  const onLogin = useCallback(() => {
     console.log("onLogin");
     UserApi.current().then((resp) => {
       console.log("current user fetched");
@@ -43,7 +43,7 @@ export default function App() {
     });
   }, [setUser]);
 
-  const onLogout = React.useCallback(async () => {
+  const onLogout = useCallback(async () => {
     await UserApi.logout();
     console.log("logged out");
     setUser(null);
@@ -57,28 +57,28 @@ export default function App() {
         </Route>
         <Route path="/room/:roomId">
           {(params) => (
-            <UserLayout user={user} onLogout={onLogout}>
+            <UserLayout onLogout={onLogout} user={user}>
               <RoomView roomId={Number.parseInt(params.roomId)} />
             </UserLayout>
           )}
         </Route>
         <Route path="/account">
-          <UserLayout user={user} onLogout={onLogout}>
+          <UserLayout onLogout={onLogout} user={user}>
             <Account setUser={setUser} />
           </UserLayout>
         </Route>
         <Route path="/todos">
-          <UserLayout user={user} onLogout={onLogout}>
+          <UserLayout onLogout={onLogout} user={user}>
             <TodoView />
           </UserLayout>
         </Route>
         <Route path="/about">
-          <UserLayout user={user} onLogout={onLogout}>
+          <UserLayout onLogout={onLogout} user={user}>
             <About />
           </UserLayout>
         </Route>
         <Route path="/">
-          <UserLayout user={user} onLogout={onLogout}>
+          <UserLayout onLogout={onLogout} user={user}>
             <Homepage />
           </UserLayout>
         </Route>

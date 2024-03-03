@@ -5,13 +5,13 @@ import EditTodoStatus from "@/views/TodoView/EditTodoStatus";
 import TodoCreate from "@/views/TodoView/TodoCreate";
 import TodoEdit from "@/views/TodoView/TodoEdit";
 import TodoItem from "@/views/TodoView/TodoItem";
-import React from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function TodoView() {
-  const [todos, setTodos] = React.useState<Todo[]>([]);
-  const [editTodo, setEditTodo] = React.useState<Todo | null>(null);
-  const [createTodoOpen, setCreateTodoOpen] = React.useState<boolean>(false);
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [editTodo, setEditTodo] = useState<Todo | null>(null);
+  const [createTodoOpen, setCreateTodoOpen] = useState<boolean>(false);
 
   const { register, watch } = useForm({
     defaultValues: {
@@ -28,31 +28,36 @@ export default function TodoView() {
     filters.includes(todo.status as unknown as TodoStatusEnum),
   );
 
-  const reloadTodos = React.useCallback(async function () {
+  const reloadTodos = useCallback(async function () {
     const resp = await TodoApi.getAll({ sort_by: "modified_at", sort_dir: "desc" });
     setTodos(resp.data);
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     reloadTodos();
   }, [reloadTodos]);
 
-  async function onDeleteTodo(id: number) {
-    await TodoApi.delete(id);
-    setEditTodo(null);
-    reloadTodos();
-  }
+  const onDeleteTodo = useCallback(
+    async function (id: number) {
+      await TodoApi.delete(id);
+      setEditTodo(null);
+      reloadTodos();
+    },
+    [reloadTodos],
+  );
+
+  const onCreateTodo = useCallback(() => setCreateTodoOpen(true), []);
 
   return (
     <main className="flex min-h-screen flex-1 flex-col items-center space-y-4 p-8">
       <div className="flex space-x-8">
         <h1>Todos</h1>
-        <Button variant="filled" onClick={() => setCreateTodoOpen(true)}>
+        <Button onClick={onCreateTodo} variant="filled">
           Create
         </Button>
       </div>
       <div className="flex flex-row space-x-4">
-        <span>Show / Hide: </span>
+        <span>Show / Hide:</span>
         <EditTodoStatus {...register("filters")} type="checkbox" value={TodoStatusEnum.Todo} />
         <EditTodoStatus
           {...register("filters")}
@@ -63,16 +68,16 @@ export default function TodoView() {
       </div>
       <ul className="space-y-4">
         {displayedTodos.map((todo) => (
-          <TodoItem key={todo.id} todo={todo} onClick={() => setEditTodo(todo)} />
+          <TodoItem key={todo.id} onClick={setEditTodo} todo={todo} />
         ))}
       </ul>
       <TodoEdit
         editTodo={editTodo}
-        setEditTodo={setEditTodo}
-        onSubmitted={reloadTodos}
         onDelete={onDeleteTodo}
+        onSubmitted={reloadTodos}
+        setEditTodo={setEditTodo}
       />
-      <TodoCreate open={createTodoOpen} setOpen={setCreateTodoOpen} onSubmitted={reloadTodos} />
+      <TodoCreate onSubmitted={reloadTodos} open={createTodoOpen} setOpen={setCreateTodoOpen} />
     </main>
   );
 }

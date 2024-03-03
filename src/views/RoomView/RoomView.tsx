@@ -4,18 +4,19 @@ import Button from "@/components/Button";
 import { type Room, type RoomEventIn } from "@/types/api";
 import Entry from "@/views/RoomView/Entry";
 import entryReducer from "@/views/RoomView/entryReducer";
-import React, { type MouseEvent } from "react";
+import type { ChangeEvent, MouseEvent } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import { useLocation } from "wouter";
 
 export interface RoomViewProps {
-  roomId: number;
+  readonly roomId: number;
 }
 
 export default function RoomView({ roomId }: RoomViewProps) {
-  const [room, setRoom] = React.useState<Room | null>(null);
-  const [entries, dispatch] = React.useReducer(entryReducer, []);
-  const [content, setContent] = React.useState("");
-  const [users, setUsers] = React.useState([] as number[]);
+  const [room, setRoom] = useState<Room | null>(null);
+  const [entries, dispatch] = useReducer(entryReducer, []);
+  const [content, setContent] = useState("");
+  const [users, setUsers] = useState([] as number[]);
   const [, setLocation] = useLocation();
 
   const ws = useWebsocket({
@@ -29,14 +30,22 @@ export default function RoomView({ roomId }: RoomViewProps) {
     },
   });
 
-  function submitMessage(evt: MouseEvent<HTMLButtonElement>) {
-    evt.preventDefault();
-    evt.stopPropagation();
-    ws?.send(JSON.stringify({ event: "message", data: { content, room_id: roomId } }));
-    setContent("");
-  }
+  const submitMessage = useCallback(
+    function (evt: MouseEvent<HTMLButtonElement>) {
+      evt.preventDefault();
+      evt.stopPropagation();
+      ws?.send(JSON.stringify({ event: "message", data: { content, room_id: roomId } }));
+      setContent("");
+    },
+    [content, roomId, ws],
+  );
 
-  React.useEffect(() => {
+  const onChange = useCallback(
+    (evt: ChangeEvent<HTMLTextAreaElement>) => setContent(evt.target.value),
+    [],
+  );
+
+  useEffect(() => {
     (async function () {
       dispatch({ type: "clear" });
       try {
@@ -68,12 +77,8 @@ export default function RoomView({ roomId }: RoomViewProps) {
         ))}
       </div>
       <form className="flex flex-row flex-nowrap items-stretch space-x-2">
-        <textarea
-          value={content}
-          onChange={(evt) => setContent(evt.target.value)}
-          className="flex-1 font-mono text-lg"
-        />
-        <Button variant="filled" onClick={submitMessage}>
+        <textarea className="flex-1 font-mono text-lg" onChange={onChange} value={content} />
+        <Button onClick={submitMessage} variant="filled">
           Send
         </Button>
       </form>

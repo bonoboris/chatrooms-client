@@ -2,13 +2,13 @@ import { UserApi, setFormErrors } from "@/common/api";
 import useUser from "@/common/useUser";
 import Button from "@/components/Button";
 import InputError from "@/components/InputError";
-import React from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation } from "wouter";
 
 export interface SignInProps {
   /** Callback on successful login */
-  onLogin: () => void;
+  readonly onLogin: () => void;
 }
 
 export default function SignIn({ onLogin }: SignInProps) {
@@ -24,7 +24,7 @@ export default function SignIn({ onLogin }: SignInProps) {
   const [, setLocation] = useLocation();
 
   // If already signed in, redirect to homepage
-  React.useEffect(() => {
+  useEffect(() => {
     if (user != null) setLocation("/");
   }, [setLocation, user]);
 
@@ -42,21 +42,21 @@ export default function SignIn({ onLogin }: SignInProps) {
     <main className="flex h-screen w-full flex-col items-center justify-center space-y-4 p-8">
       <div className="space-y-8 rounded border border-purple-200 p-8 shadow-2xl shadow-purple-300/50">
         <h1 className="text-purple-700">Sign In</h1>
-        <form onSubmit={onSubmit} className="flex flex-col space-y-4">
+        <form className="flex flex-col space-y-4" onSubmit={onSubmit}>
           <InputError error={errors.root} />
           <fieldset className="grid grid-cols-[auto_1fr] items-center gap-x-4 gap-y-2">
-            <label htmlFor="username" className="text-right">
+            <label className="text-right" htmlFor="username">
               Username
             </label>
-            <input {...register("username")} id="username" type="text" required />
-            <InputError error={errors.username} dense />
-            <label htmlFor="password" className="text-right">
+            <input {...register("username")} id="username" required type="text" />
+            <InputError dense error={errors.username} />
+            <label className="text-right" htmlFor="password">
               Password
             </label>
-            <input {...register("password")} id="password" type="password" required />
-            <InputError error={errors.password} dense />
+            <input {...register("password")} id="password" required type="password" />
+            <InputError dense error={errors.password} />
           </fieldset>
-          <Button variant="filled" type="submit" className="self-end text-xl">
+          <Button className="self-end text-xl" type="submit" variant="filled">
             Sign in
           </Button>
         </form>

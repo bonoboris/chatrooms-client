@@ -1,13 +1,16 @@
 import { RoomApi } from "@/common/api";
 import useUser from "@/common/useUser";
 import { type Room } from "@/types/api";
-import React from "react";
+import { memo, useEffect, useState } from "react";
 import { Link } from "wouter";
 
-const RoomCard = React.memo(function RoomCard({ room }: { room: Room }) {
+const RoomCard = memo(function RoomCard({ room }: { readonly room: Room }) {
   return (
     <Link href={`/room/${room.id}`}>
-      <button className="w-64 rounded border border-neutral-500 hover:border-purple-700 hover:ring-2 hover:ring-purple-500/50 focus:ring-2">
+      <button
+        className="w-64 rounded border border-neutral-500 hover:border-purple-700 hover:ring-2 hover:ring-purple-500/50 focus:ring-2"
+        type="button"
+      >
         <div className="flex h-64 w-full items-center justify-center rounded-t bg-neutral-100 text-8xl dark:bg-neutral-900">
           {room.name.slice(0, 2)}
         </div>
@@ -19,8 +22,8 @@ const RoomCard = React.memo(function RoomCard({ room }: { room: Room }) {
 
 export default function Homepage() {
   const user = useUser();
-  const [rooms, setRooms] = React.useState<Room[]>([]);
-  React.useEffect(() => {
+  const [rooms, setRooms] = useState<Room[]>([]);
+  useEffect(() => {
     RoomApi.getAll().then((resp) => setRooms(resp.data));
   }, []);
 

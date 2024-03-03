@@ -1,6 +1,6 @@
 /* eslint-env node */
 
-import { Config } from "tailwindcss";
+import { type Config } from "tailwindcss";
 import plugin from "tailwindcss/plugin";
 
 const classNames = {

@@ -1,6 +1,6 @@
 import { UserApi } from "@/common/api";
 import { type User } from "@/types/api";
-import React from "react";
+import { useState, useEffect } from "react";
 
 /**
  * Load user information, either through API call or from cache
@@ -9,8 +9,8 @@ import React from "react";
  * @returns User data
  */
 export default function (userId: number) {
-  const [user, setUser] = React.useState<User | null>(null);
-  React.useEffect(() => {
+  const [user, setUser] = useState<User | null>(null);
+  useEffect(() => {
     UserApi.getUserData(userId).then((data) => setUser(data));
   });
   return user;

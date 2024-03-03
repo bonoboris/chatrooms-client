@@ -1,4 +1,4 @@
-import React from "react";
+import { useCallback, useState } from "react";
 
 export function getLocalStorage<T = unknown>(key: string): T | undefined;
 export function getLocalStorage<T = unknown>(key: string, defaultValue: T): T;
@@ -42,10 +42,13 @@ export function useLocalStorage<T = undefined>(
   key: string,
   defaultValue: T,
 ): [T, (value: T) => void] {
-  const [value, setValue] = React.useState<T>(() => getLocalStorage(key, defaultValue));
-  function setValueAndLocalStorage(value: T) {
-    setLocalStorage(key, value);
-    setValue(value);
-  }
+  const [value, setValue] = useState<T>(() => getLocalStorage(key, defaultValue));
+  const setValueAndLocalStorage = useCallback(
+    (value: T) => {
+      setLocalStorage(key, value);
+      setValue(value);
+    },
+    [key],
+  );
   return [value, setValueAndLocalStorage];
 }

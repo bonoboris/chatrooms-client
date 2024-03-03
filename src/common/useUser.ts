@@ -1,8 +1,8 @@
 import { type User } from "@/types/api";
-import React from "react";
+import { createContext, useContext } from "react";
 import { useLocation } from "wouter";
 
-export const UserContext = React.createContext<User | null | undefined>(null);
+export const UserContext = createContext<User | null | undefined>(null);
 UserContext.displayName = "UserContext";
 
 export default function useUser(redirectLogin: true): User | undefined;
@@ -17,7 +17,7 @@ export default function useUser(redirectLogin?: false): User | null | undefined;
  */
 export default function useUser(redirectLogin = false): User | null | undefined {
   const [location, setLocation] = useLocation();
-  const user = React.useContext(UserContext);
+  const user = useContext(UserContext);
   if (redirectLogin && user === null && location != "/signin") {
     console.log("useUser is null: redirect to signin!");
     setLocation("/signin");

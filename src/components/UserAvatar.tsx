@@ -3,11 +3,11 @@ import { type User } from "@/types/api";
 import clsx from "clsx";
 
 export interface UserAvatarProps {
-  user?: User | null;
-  className?: string;
+  readonly user: User | null | undefined;
+  readonly className?: string;
 }
 
-export default function UserAvatar({ user, className }: UserAvatarProps) {
+export default function UserAvatar({ user, className = undefined }: UserAvatarProps) {
   if (user?.avatar_id == null)
     return (
       <div
@@ -21,8 +21,8 @@ export default function UserAvatar({ user, className }: UserAvatarProps) {
     );
   return (
     <img
-      className={className}
       alt={`${user?.username} avatar`}
+      className={className}
       src={`${baseURL}/files/avatars/${user.avatar_id}`}
     />
   );

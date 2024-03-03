@@ -4,23 +4,23 @@ import Dialog from "@/components/Dialog";
 import { TodoStatusEnum, type Todo } from "@/types/api";
 import EditTodoStatus from "@/views/TodoView/EditTodoStatus";
 import { DEFAULT_TODO } from "@/views/TodoView/common";
-import React from "react";
+import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 export interface EditTodoProps {
-  editTodo: Todo | null;
-  setEditTodo: (todo: Todo | null) => void;
-  onSubmitted: (values: Todo) => void;
-  onDelete: (id: number) => void;
+  readonly editTodo: Todo | null;
+  readonly setEditTodo: (todo: Todo | null) => void;
+  readonly onSubmitted: (values: Todo) => void;
+  readonly onDelete: (id: number) => void;
 }
 
 export default function TodoEdit({ editTodo, setEditTodo, onSubmitted, onDelete }: EditTodoProps) {
   const open = editTodo != null;
-  const setOpen = (val: boolean) => !val && setEditTodo(null);
+  const setOpen = useCallback((val: boolean) => !val && setEditTodo(null), [setEditTodo]);
 
   const { reset, register, handleSubmit, setError } = useForm({ defaultValues: DEFAULT_TODO });
 
-  React.useEffect(() => {
+  useEffect(() => {
     open &&
       reset({
         description: editTodo.description,
@@ -38,9 +38,10 @@ export default function TodoEdit({ editTodo, setEditTodo, onSubmitted, onDelete 
     }
   });
 
-  function handleDelete() {
-    return editTodo != null && onDelete(editTodo.id);
-  }
+  const handleDelete = useCallback(
+    () => editTodo != null && onDelete(editTodo.id),
+    [editTodo, onDelete],
+  );
 
   return (
     <Dialog modal open={open} setOpen={setOpen}>
@@ -54,14 +55,13 @@ export default function TodoEdit({ editTodo, setEditTodo, onSubmitted, onDelete 
         </div>
         <div className="flex flex-col">
           <label htmlFor="edit-description">Description</label>
-          <textarea {...register("description")} id="edit-description" rows={10} cols={60} />
+          <textarea {...register("description")} cols={60} id="edit-description" rows={10} />
         </div>
         <div className="flex w-full">
-          <Button variant="outlined" color="error" onClick={handleDelete}>
+          <Button color="error" onClick={handleDelete} variant="outlined">
             Delete
           </Button>
-
-          <Button type="submit" variant="filled" className="ml-auto">
+          <Button className="ml-auto" type="submit" variant="filled">
             Save
           </Button>
         </div>

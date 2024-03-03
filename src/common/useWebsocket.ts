@@ -1,5 +1,5 @@
 import { getWebSocketBaseUrl } from "@/common/api";
-import React from "react";
+import { useRef, useEffect } from "react";
 
 /** UseWebsocket parameters */
 export interface UseWebsocket {
@@ -44,13 +44,13 @@ export default function useWebsocket({
   onOpen = null,
 }: UseWebsocket) {
   const url = path.startsWith("/") ? getWebSocketBaseUrl() + path : path;
-  const wsRef = React.useRef<WebSocket | null>(null);
-  React.useEffect(() => {
+  const wsRef = useRef<WebSocket | null>(null);
+  useEffect(() => {
     wsRef.current = new WebSocket(url, protocols);
     return withLog("ws cleanup", () => wsRef.current?.close());
   }, [url, protocols]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (wsRef.current != null) {
       wsRef.current.onopen = onOpen != null ? withLog("ws open", onOpen) : onOpen;
       wsRef.current.onmessage = onMessage != null ? withLog("ws message", onMessage) : onMessage;
