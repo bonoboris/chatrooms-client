@@ -16,11 +16,11 @@ export default function MessageEntry(props: MessageEntryProps) {
   return (
     <div
       className={clsx(
-        "flex items-center space-x-2 border-t border-neutral-500/50 py-1",
+        "flex items-center space-x-2 border-t border-neutral-500/50 px-2 py-1",
         isCurrentUser && "bg-neutral-100 dark:bg-neutral-700/30",
       )}
     >
-      <UserAvatar className="h-10 w-10 rounded-full" user={user} />
+      <UserAvatar className="mt-1 h-10 w-10 self-start rounded-full" user={user} />
       <div className="flex-1 space-y-1">
         <p className="space-x-2 text-sm">
           <span className="font-bold">{user?.username ?? data.created_by}</span>

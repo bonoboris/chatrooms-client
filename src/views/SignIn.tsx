@@ -39,9 +39,10 @@ export default function SignIn({ onLogin }: SignInProps) {
     }
   });
   return (
-    <main className="flex h-screen w-full flex-col items-center justify-center space-y-4 p-8">
-      <div className="space-y-8 rounded border border-purple-200 p-8 shadow-2xl shadow-purple-300/50">
-        <h1 className="text-purple-700">Sign In</h1>
+    <main className="flex h-screen w-full flex-col items-center justify-center space-y-24 bg-neutral-100 p-8 dark:bg-neutral-900">
+      <h1 className="text-8xl text-purple-500 dark:text-purple-500">chatrooms.</h1>
+      <div className="space-y-4 rounded border border-purple-200 bg-neutral-50 p-8 shadow-2xl shadow-purple-300/50 dark:bg-neutral-950">
+        <h2>Sign In</h2>
         <form className="flex flex-col space-y-4" onSubmit={onSubmit}>
           <InputError error={errors.root} />
           <fieldset className="grid grid-cols-[auto_1fr] items-center gap-x-4 gap-y-2">

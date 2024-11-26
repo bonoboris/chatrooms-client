@@ -8,7 +8,7 @@ const RoomCard = memo(function RoomCard({ room }: { readonly room: Room }) {
   return (
     <Link href={`/room/${room.id}`}>
       <button
-        className="w-64 rounded border border-neutral-500 hover:border-purple-700 hover:ring-2 hover:ring-purple-500/50 focus:ring-2"
+        className="w-64 rounded border border-normal hover:border-purple-700 hover:ring-2 hover:ring-purple-500/50 focus:ring-2"
         type="button"
       >
         <div className="flex h-64 w-full items-center justify-center rounded-t bg-neutral-100 text-8xl dark:bg-neutral-900">

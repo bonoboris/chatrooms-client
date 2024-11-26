@@ -11,7 +11,7 @@ const TodoItem = memo(function TodoShow({ todo, onClick }: TodoItemProps) {
   const handleClick = useCallback(() => onClick(todo), [onClick, todo]);
   return (
     <li
-      className="cursor-pointer rounded-lg border p-2 hover:bg-neutral-100 dark:hover:bg-neutral-900"
+      className="cursor-pointer rounded-lg border p-2 border-normal hover:bg-neutral-100 dark:hover:bg-neutral-900"
       key={todo.id}
       onClick={handleClick}
     >

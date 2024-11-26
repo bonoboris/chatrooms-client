@@ -29,7 +29,7 @@ export default function UserLayout({ user, onLogout, children }: UserLayoutProps
 
   return (
     <div className="flex min-h-screen w-full">
-      <aside className="border-base sticky top-0 flex h-screen w-64 flex-col items-stretch space-y-4 border-r bg-neutral-100 dark:bg-neutral-900">
+      <aside className="sticky top-0 flex h-screen w-64 flex-col items-stretch space-y-4 border-r bg-neutral-100 border-normal dark:bg-neutral-900">
         <div className="flex flex-col items-stretch space-y-2">
           <h1>
             <Link className="block p-4 text-purple-500 hover:bg-purple-500/10" href="/">
@@ -49,7 +49,7 @@ export default function UserLayout({ user, onLogout, children }: UserLayoutProps
             Log Out
           </Button>
         </div>
-        <hr className="border-neutral-300 dark:border-neutral-700" />
+        <hr className="border-normal" />
         <Link
           className="btn flex w-full rounded-none p-2 text-xl font-semibold hover:bg-neutral-300 dark:hover:bg-neutral-700"
           href="/todos"
@@ -57,7 +57,7 @@ export default function UserLayout({ user, onLogout, children }: UserLayoutProps
           My Todos
         </Link>
         <div className="flex-1" />
-        <hr className="border-neutral-300 dark:border-neutral-700" />
+        <hr className="border-normal" />
         <div className="flex w-full items-center justify-center space-x-4 place-self-end pb-2">
           <span>Theme:</span>
           <Button onClick={setDarkModeOff} variant={darkMode ? "default" : "filled"}>
